@@ -1,0 +1,35 @@
+version: "3"
+services:
+
+  client:
+    restart: always
+    container_name: "client"
+    build: ./client
+    tty: true
+    networks:
+      base_network:
+        ipv4_address: 192.168.11.3
+    command: tcpdump -i eth0 -X -s 0 -w /tmp/cap/client.pcap
+    volumes:
+      - ./cap/:/tmp/cap
+      
+  server:
+    restart: always
+    build: ./server
+    container_name: "server"
+    working_dir: "/root/"
+    tty: true
+    networks:
+      base_network:
+        ipv4_address: 192.168.11.4
+    command: tcpdump -i eth0 -X -s 0 -w /tmp/cap/server.pcap
+    volumes:
+      - ./cap/:/tmp/cap
+      
+networks:
+  base_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.11.0/24
