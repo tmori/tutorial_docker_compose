@@ -12,3 +12,4 @@ ENV TERM xterm
 RUN apt update -y && apt upgrade -y && apt install -y tcpdump
 RUN apt install -y iputils-ping net-tools
 RUN apt-get install -y python3-pip
+RUN apt-get install -y curl
