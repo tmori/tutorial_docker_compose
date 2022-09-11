@@ -28,7 +28,38 @@ services:
     volumes:
       - ./cap/:/tmp/cap
       - ./server/src/:/root/workspace/src
-      
+
+  php:
+    restart: always
+    container_name: "php"
+    build: ./php
+    tty: true
+    networks:
+      base_network:
+        ipv4_address: 192.168.11.5
+    working_dir: /var/www/hako
+    volumes:
+      - ./cap/:/tmp/cap
+      - ./php/hako/:/var/www/hako
+
+  mariadb:
+    image: mariadb:10.4
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: hako_database
+      MYSQL_ROOT_PASSWORD: hako_secret
+      MYSQL_USER: hako_user
+      MYSQL_PASSWORD: hako_secret
+    networks:
+      base_network:
+        ipv4_address: 192.168.11.6
+
+volumes:
+  mariadb-data:
+
 networks:
   base_network:
     driver: bridge
